@@ -1,0 +1,23 @@
+{
+  "name": "react-scratchblocks",
+  "version": "1.0.0",
+  "description": "Display Scratch blocks using a ReactJS component",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TuringLab/react-scratchblocks.git"
+  },
+  "keywords": [
+    "react-component",
+    "react"
+  ],
+  "author": "TuringLab",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TuringLab/react-scratchblocks/issues"
+  },
+  "homepage": "https://github.com/TuringLab/react-scratchblocks#readme"
+}

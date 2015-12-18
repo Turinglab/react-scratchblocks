@@ -3,8 +3,11 @@
  */
 
 import React from 'react'
+
 import sb2 from './scratchblocks2'
 import Scratchblock from './Scratchblock'
+
+import './scratchblocks2.css'
 
 class Scratchblocks extends React.Component {
 

@@ -44,11 +44,7 @@ class Scratchblocks extends React.Component {
     return (
       <div className={this.classNames()}>
         {scripts.map((script,i) => (
-          <div key={i}>
-            {script.map((block,j) => (
-              <Scratchblock key={j} block={block} />
-            ))}
-          </div>
+          <Scratchblock key={i} script={script} />
         ))}
       </div>
     );

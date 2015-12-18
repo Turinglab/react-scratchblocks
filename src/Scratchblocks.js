@@ -1,5 +1,9 @@
 /**
- * @copyright 2015, TuringLab <info@turinglab.com>
+ * Copyright 2013, Tim Radvan
+ * @license MIT
+ * http://opensource.org/licenses/MIT
+ *
+ * Converted to React by TuringLab <info@turinglab.com>
  */
 
 import React from 'react'

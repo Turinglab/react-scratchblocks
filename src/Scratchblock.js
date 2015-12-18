@@ -1,116 +1,141 @@
 /**
- * @copyright 2015, TuringLab <info@turinglab.com>
+ * Original Copyright 2013, Tim Radvan
+ * @license MIT
+ * http://opensource.org/licenses/MIT
+ *
+ * Converted to React by TuringLab <info@turinglab.com>
  */
 
 import React from 'react'
 
 class Scratchblock extends React.Component {
 
-    renderStack(script) {
-        var $script = $(document.createElement("div"));
-        for (var i=0; i<script.length; i++) {
-            var info = script[i];
-            $script.append(renderStackItem(info));
-            if (info.comment !== undefined) {
-                $script.append(renderComment(info));
-            }
-        }
-        return $script;
+  renderStack(script,classNames) {
+
+    classNames = classNames || [];
+    const className = classNames.join(' ');
+
+    return (
+      <div className={className}>
+        {script.map((item) => renderItem(item))}
+      </div>
+    )
+
+    // var $script = $(document.createElement("div"));
+    // for (var i=0; i<script.length; i++) {
+    //   var item = script[i];
+    //   $script.append(renderItem(item));
+    //   if (item.comment !== undefined) {
+    //     $script.append(renderComment(item));
+    //   }
+    // }
+    // return $script;
+  }
+
+
+  renderItem(item) {
+
+    if (['cwrap','cmouth'].includes(item.type) == 'cwrap') {
+      let classNames = [item.type,item.category];
+      if (item.shape === 'cap') classNames.push(item.shape);
+      return this.renderStack(item.contents,classNames);
+    }
+    
+    return this.renderBlock(item);
+
+
+    // switch (item.type) {
+    //   case "cwrap":
+    //     var $cwrap = this.renderStack(item.contents).addClass("cwrap")
+    //             .addClass(item.category);
+    //     if (item.shape === "cap") $cwrap.addClass(item.shape)
+    //     return $cwrap;
+
+    //   case "cmouth":
+    //     return this.renderStack(item.contents).addClass("cmouth")
+    //             .addClass(item.category);
+
+    //   default:
+    //     return this.renderBlock(item);
+    // }
+  }
+
+  // TODO CONVERT COMMENT
+  renderComment(item) {
+    var $comment = $(document.createElement("div")).addClass("comment")
+        .append($(document.createElement("div"))
+        .append(document.createTextNode(item.comment.trim() || " ")));
+    if (item.shape) {
+      $comment.addClass("attached");
+      $comment.addClass("to-" + item.shape);
+    }
+    return $comment;
+  }
+
+  renderBlock(item) {
+    if (!item) return;
+
+    // make DOM element
+    var $block = $(document.createElement("div"));
+    $block.addClass(item.shape);
+    $block.addClass(item.category);
+    if (item.flag) $block.addClass(item.flag);
+
+    // color insert?
+    if (item.shape === "color") {
+      $block.css({"background-color": item.pieces[0]});
+      $block.text(" ");
+      return $block;
     }
 
-
-    renderStackItem(info) {
-        switch (info.type) {
-            case "cwrap":
-                var $cwrap = this.renderStack(info.contents).addClass("cwrap")
-                                .addClass(info.category);
-                if (info.shape === "cap") $cwrap.addClass(info.shape)
-                return $cwrap;
-
-            case "cmouth":
-                return this.renderStack(info.contents).addClass("cmouth")
-                                .addClass(info.category);
-
-            default:
-                return this.renderBlock(info);
-        }
+    // ringify?
+    var $ring;
+    if (item.isRinged) {
+      $ring = $(document.createElement("div")).addClass("ring-inner")
+                 .addClass(item.shape).append($block);
+    }
+    if (item.flag === "ring") {
+      $block.addClass("ring");
     }
 
-    renderComment(info) {
-        var $comment = $(document.createElement("div")).addClass("comment")
-                .append($(document.createElement("div"))
-                .append(document.createTextNode(info.comment.trim() || " ")));
-        if (info.shape) {
-            $comment.addClass("attached");
-            $comment.addClass("to-" + info.shape);
-        }
-        return $comment;
+    // empty?
+    if (!item.pieces.length && item.flag !== "cend") {
+      $block.addClass("empty");
+      return $ring || $block;
     }
 
-    renderBlock(info) {
-        if (!info) return;
-
-        // make DOM element
-        var $block = $(document.createElement("div"));
-        $block.addClass(info.shape);
-        $block.addClass(info.category);
-        if (info.flag) $block.addClass(info.flag);
-
-        // color insert?
-        if (info.shape === "color") {
-            $block.css({"background-color": info.pieces[0]});
-            $block.text(" ");
-            return $block;
-        }
-
-        // ringify?
-        var $ring;
-        if (info.isRinged) {
-            $ring = $(document.createElement("div")).addClass("ring-inner")
-                               .addClass(info.shape).append($block);
-        }
-        if (info.flag === "ring") {
-            $block.addClass("ring");
-        }
-
-        // empty?
-        if (!info.pieces.length && info.flag !== "cend") {
-            $block.addClass("empty");
-            return $ring || $block;
-        }
-
-        // output text segments & args
-        for (var i=0; i<info.pieces.length; i++) {
-            var piece = info.pieces[i];
-            if (typeof piece === "object") {
-                $block.append(renderBlock(piece));
-            } else if (piece === "@" && info.imageReplacement) {
-                var $image = $("<span>")
-                $image.addClass(info.imageReplacement);
-                var $span = $("<span>")
-                $span.text(imageText[info.imageReplacement]);
-                $image.append($span);
-                $block.append($image);
-            } else if (/^[▶◀▸◂+]$/.test(piece)) {
-                $block.append(
-                    $(document.createElement("span")).addClass("arrow")
-                        .append(document.createTextNode(piece)));
-            } else {
-                if (!piece) piece = " ";
-                $block.append(document.createTextNode(piece));
-            }
-        }
-
-        return $ring || $block;
+    // output text segments & args
+    for (var i=0; i<item.pieces.length; i++) {
+      var piece = item.pieces[i];
+      if (typeof piece === "object") {
+        $block.append(renderBlock(piece));
+      } else if (piece === "@" && item.imageReplacement) {
+        var $image = $("<span>")
+        $image.addClass(item.imageReplacement);
+        var $span = $("<span>")
+        $span.text(imageText[item.imageReplacement]);
+        $image.append($span);
+        $block.append($image);
+      } else if (/^[▶◀▸◂+]$/.test(piece)) {
+        $block.append(
+          $(document.createElement("span")).addClass("arrow")
+            .append(document.createTextNode(piece)));
+      } else {
+        if (!piece) piece = " ";
+        $block.append(document.createTextNode(piece));
+      }
     }
 
-    render() {
-        const block = this.props.block;
-        console.log(block);
-        return (
-          <div className="script">{block.toString()}</div>
-        );
-    }
+    return $ring || $block;
+  }
+
+  render() {
+    const block = this.props.block;
+    console.log(block);
+    return (
+      <div className="script">{block.toString()}</div>
+    );
+  }
 
 }
 

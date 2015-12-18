@@ -6,72 +6,37 @@ import React from 'react'
 
 class Scratchblock extends React.Component {
 
-    parse(selector, options) {
-        selector = selector || "pre.blocks";
-        options = options || {
-            inline: false,
-        }
-
-        // find elements
-        $(selector).each(function (i, el) {
-            var $el = $(el),
-                $container = $('<div>'),
-                code,
-                scripts,
-                html = $el.html();
-
-            html = html.replace(/<br>\s?|\n|\r\n|\r/ig, '\n');
-            code = $('<pre>' + html + '</pre>').text();
-            if (options.inline) {
-                code = code.replace('\n', '');
-            }
-
-            var scripts = this.sb2.parse_scripts(code);
-
-            $el.text("");
-            $el.append($container);
-            $container.addClass("sb2");
-            if (options.inline) {
-                $container.addClass("inline-block");
-            }
-            for (var i=0; i<scripts.length; i++) {
-                var $script = render_stack(scripts[i]).addClass("script");
-                $container.append($script);
-            }
-        });
-    };
-
-    render_stack(script) {
+    renderStack(script) {
         var $script = $(document.createElement("div"));
         for (var i=0; i<script.length; i++) {
             var info = script[i];
-            $script.append(render_stack_item(info));
+            $script.append(renderStackItem(info));
             if (info.comment !== undefined) {
-                $script.append(render_comment(info));
+                $script.append(renderComment(info));
             }
         }
         return $script;
     }
 
 
-    render_stack_item(info) {
+    renderStackItem(info) {
         switch (info.type) {
             case "cwrap":
-                var $cwrap = this.render_stack(info.contents).addClass("cwrap")
+                var $cwrap = this.renderStack(info.contents).addClass("cwrap")
                                 .addClass(info.category);
                 if (info.shape === "cap") $cwrap.addClass(info.shape)
                 return $cwrap;
 
             case "cmouth":
-                return this.render_stack(info.contents).addClass("cmouth")
+                return this.renderStack(info.contents).addClass("cmouth")
                                 .addClass(info.category);
 
             default:
-                return this.render_block(info);
+                return this.renderBlock(info);
         }
     }
 
-    render_comment(info) {
+    renderComment(info) {
         var $comment = $(document.createElement("div")).addClass("comment")
                 .append($(document.createElement("div"))
                 .append(document.createTextNode(info.comment.trim() || " ")));
@@ -82,7 +47,7 @@ class Scratchblock extends React.Component {
         return $comment;
     }
 
-    render_block(info) {
+    renderBlock(info) {
         if (!info) return;
 
         // make DOM element
@@ -100,7 +65,7 @@ class Scratchblock extends React.Component {
 
         // ringify?
         var $ring;
-        if (info.is_ringed) {
+        if (info.isRinged) {
             $ring = $(document.createElement("div")).addClass("ring-inner")
                                .addClass(info.shape).append($block);
         }
@@ -118,12 +83,12 @@ class Scratchblock extends React.Component {
         for (var i=0; i<info.pieces.length; i++) {
             var piece = info.pieces[i];
             if (typeof piece === "object") {
-                $block.append(render_block(piece));
-            } else if (piece === "@" && info.image_replacement) {
+                $block.append(renderBlock(piece));
+            } else if (piece === "@" && info.imageReplacement) {
                 var $image = $("<span>")
-                $image.addClass(info.image_replacement);
+                $image.addClass(info.imageReplacement);
                 var $span = $("<span>")
-                $span.text(image_text[info.image_replacement]);
+                $span.text(imageText[info.imageReplacement]);
                 $image.append($span);
                 $block.append($image);
             } else if (/^[▶◀▸◂+]$/.test(piece)) {
@@ -143,7 +108,7 @@ class Scratchblock extends React.Component {
         const block = this.props.block;
         console.log(block);
         return (
-          <div className="script">{block.blockid}</div>
+          <div className="script">{block.toString()}</div>
         );
     }
 

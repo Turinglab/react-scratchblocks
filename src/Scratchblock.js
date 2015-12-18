@@ -17,23 +17,12 @@ class Scratchblock extends React.Component {
 
   renderStack(script,classNames) {
 
-    console.log(script);
-
     return (
       <div className={this.className(classNames)}>
         {script.map((item) => this.renderItem(item))}
       </div>
     )
 
-    // var $script = $(document.createElement("div"));
-    // for (var i=0; i<script.length; i++) {
-    //   var item = script[i];
-    //   $script.append(renderItem(item));
-    //   if (item.comment !== undefined) {
-    //     $script.append(renderComment(item));
-    //   }
-    // }
-    // return $script;
   }
 
 
@@ -47,34 +36,19 @@ class Scratchblock extends React.Component {
     
     return this.renderBlock(item);
 
-
-    // switch (item.type) {
-    //   case "cwrap":
-    //     var $cwrap = this.renderStack(item.contents).addClass("cwrap")
-    //             .addClass(item.category);
-    //     if (item.shape === "cap") $cwrap.addClass(item.shape)
-    //     return $cwrap;
-
-    //   case "cmouth":
-    //     return this.renderStack(item.contents).addClass("cmouth")
-    //             .addClass(item.category);
-
-    //   default:
-    //     return this.renderBlock(item);
-    // }
   }
 
-  // TODO CONVERT COMMENT
-  renderComment(item) {
-    var $comment = $(document.createElement("div")).addClass("comment")
-        .append($(document.createElement("div"))
-        .append(document.createTextNode(item.comment.trim() || " ")));
-    if (item.shape) {
-      $comment.addClass("attached");
-      $comment.addClass("to-" + item.shape);
-    }
-    return $comment;
-  }
+  // renderComment(item) {
+  //   return item.comment;
+  //   var $comment = $(document.createElement("div")).addClass("comment")
+  //       .append($(document.createElement("div"))
+  //       .append(document.createTextNode(item.comment.trim() || " ")));
+  //   if (item.shape) {
+  //     $comment.addClass("attached");
+  //     $comment.addClass("to-" + item.shape);
+  //   }
+  //   return $comment;
+  // }
 
   renderBlock(item) {
     if (!item) return;
@@ -89,10 +63,6 @@ class Scratchblock extends React.Component {
         backgroundColor: item.pieces[0]
       };
       return <div className={this.className(classNames)} style={style}></div>
-    }
-
-    if (!item.pieces){
-      item.pieces = [];
     }
 
     if (!item.pieces.length && item.flag !== "cend") {
@@ -142,9 +112,7 @@ class Scratchblock extends React.Component {
   }
 
   render() {
-    return (
-      <div className="script">{this.renderStack(this.props.script)}</div>
-    );
+    return this.renderStack(this.props.script);
   }
 
 }

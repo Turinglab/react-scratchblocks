@@ -44,7 +44,7 @@ class Scratchblocks extends React.Component {
     return (
       <div className={this.classNames()}>
         {scripts.map((script,i) => (
-          <Scratchblock key={i} script={script} />
+          <Scratchblock key={i} className="script" script={script}/>
         ))}
       </div>
     );
@@ -58,7 +58,7 @@ Scratchblocks.propTypes = {
 }
 
 Scratchblocks.defaultProps = {
-  code: 'if <key [down arrow] pressed?> then\n\tchange y by (-10)\nend',
+  code: 'if <(score) < (10)> then\n\tchange y by (-10)\n\tset [score] to ((-1) * (score))\nend',
   inline: false
 }
 

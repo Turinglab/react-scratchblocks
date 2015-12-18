@@ -3,11 +3,17 @@
  */
 
 import React from 'react'
+import jQuery from 'jQuery'
+import scratchblocks from 'scratchblocks'
 
 class Scratchblocks extends React.Component {
 
+  componentDidMount() {
+    jQuery(React.findDOMNode(this.refs.tooltip)).tooltip();
+  }
+
   render() {
-    return <div>Hello</div>
+    return <div ref="tooltip">Hello Friend</div>
   }
 
 }

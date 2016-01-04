@@ -1,6 +1,6 @@
 #React Scratchblocks
 
-React Scratchbocks is a rewrie of the popular [http://github.com/blob8108/scratchblocks2](scratchblocks2) library written by Tim Radvan. Most of the code is taken from the origional howevre this version uses ReactJS as the view component as opposed to jQuery.
+React Scratchbocks is a rewrie of the popular [http://github.com/blob8108/scratchblocks2](scratchblocks2) library written by Tim Radvan. Most of the code is taken from the origional however this version uses ReactJS as the view component as opposed to jQuery.
 
 #Installation
 

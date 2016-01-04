@@ -1,11 +1,11 @@
 /**
- * Copyright 2013, Tim Radvan
+ * Original Copyright 2013, Tim Radvan
  * @license MIT
  * http://opensource.org/licenses/MIT
  *
  * Converted to React by TuringLab <info@turinglab.com>
  */
-
+ 
 import React from 'react'
 
 import sb2 from './scratchblocks2'
